@@ -1,0 +1,20 @@
+$tbColor: black;
+$androidcolor:rgb(70, 228, 70);
+
+
+ion-toolbar ion-button{
+    color:$tbColor;
+}
+ion-toolbar{
+    border-bottom:1px solid black;
+    text-align: center;
+    
+}
+ion-button{
+    display:flex;
+}
+.danger{
+    color:red;
+    font-size: 0.8em;
+    text-align: center;
+}

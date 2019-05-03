@@ -1,0 +1,1 @@
+CREATE TABLE IF NOT EXISTS telephone(telId INTEGER PRIMARY KEY AUTOINCREMENT ,manufacturer TEXT,model TEXT,url TEXT,android TEXT);

@@ -1,14 +1,26 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>
-      Ionic Blank
-    </ion-title>
-  </ion-toolbar>
-</ion-header>
-
+<ion-toolbar color="primary">
+    <ion-title>  <ion-icon name="logo-android"></ion-icon>Telephones App</ion-title>
+    <ion-buttons slot="end">
+    <ion-button (click)="goToEditTel(null)">
+        <ion-icon slot="icon-only" name="add"></ion-icon>
+    </ion-button>
+    <ion-button (click)="goToRemList()">
+        <ion-icon name="remove-circle"></ion-icon>
+    </ion-button>
+</ion-buttons>
+</ion-toolbar>
 <ion-content>
-  <div class="ion-padding">
-    The world is your oyster.
-    <p>If you get lost, the <a target="_blank" rel="noopener" href="https://ionicframework.com/docs/">docs</a> will be your guide.</p>
-  </div>
+       <form [formGroup]="telForm" (ngSubmit)="Delete()">
+    <ion-item tabindex="1" *ngFor="let tel of telephones;let i=index" formArrayName="telephones">
+       <table>
+           <tr (press)="onPress($event)" (pressup)="onPressUp($event,tel)">
+               <td >{{tel.manufacturer}}</td>
+               <td >{{tel.model}}</td>
+               <td><ion-checkbox [formControlName]="i" [disabled]="!showDelete" [ngClass]="{'disabled':!showDelete}"></ion-checkbox></td>
+           </tr>
+       </table>
+    </ion-item>
+    <ion-button type="submit" [disabled]="!showDelete" [ngClass]="{'disabled':!showDelete}">Usuń</ion-button>
+        </form>     
+    
 </ion-content>

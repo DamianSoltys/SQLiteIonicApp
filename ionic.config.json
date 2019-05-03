@@ -1,5 +1,7 @@
 {
   "name": "ApkaDruga",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "angular"
 }
