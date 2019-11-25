@@ -1,0 +1,35 @@
+<ion-content class="register-form-component">
+    <ion-header>
+        <ion-toolbar>
+            <ion-title size="large">Rejestracja</ion-title>
+        </ion-toolbar>
+    </ion-header>
+    <form
+        [formGroup]="registerForm"
+        (submit)="registerUser()"
+        class="register-form-component"
+    >
+        <ion-item>
+            <ion-label position="floating">Nazwa</ion-label>
+            <ion-input type="text" formControlName="userName"></ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-label position="floating">Email</ion-label>
+            <ion-input type="text" formControlName="email"></ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-label position="floating">Hasło</ion-label>
+            <ion-input type="text" formControlName="password"></ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-label position="floating">Powtórz hasło</ion-label>
+            <ion-input type="text" formControlName="checkPassword"></ion-input>
+        </ion-item>
+        <ion-button expand="block" color="primary" type="submit"
+            >Zarejestruj</ion-button
+        >
+
+        <p class="register-form-component__text-node">Posiadasz już konto?</p>
+        <a class="register-form-component__link--login" (click)="navigateLogin()">ZALOGUJ SIĘ</a>
+    </form>
+</ion-content>

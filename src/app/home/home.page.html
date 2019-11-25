@@ -1,26 +1,10 @@
-<ion-toolbar color="primary">
-    <ion-title>  <ion-icon name="logo-android"></ion-icon>Telephones App</ion-title>
-    <ion-buttons slot="end">
-    <ion-button (click)="goToEditTel(null)">
-        <ion-icon slot="icon-only" name="add"></ion-icon>
-    </ion-button>
-    <ion-button (click)="goToRemList()">
-        <ion-icon name="remove-circle"></ion-icon>
-    </ion-button>
-</ion-buttons>
-</ion-toolbar>
-<ion-content>
-       <form [formGroup]="telForm" (ngSubmit)="Delete()">
-    <ion-item tabindex="1" *ngFor="let tel of telephones;let i=index" formArrayName="telephones">
-       <table>
-           <tr (press)="onPress($event)" (pressup)="onPressUp($event,tel)">
-               <td >{{tel.manufacturer}}</td>
-               <td >{{tel.model}}</td>
-               <td><ion-checkbox [formControlName]="i" [disabled]="!showDelete" [ngClass]="{'disabled':!showDelete}"></ion-checkbox></td>
-           </tr>
-       </table>
-    </ion-item>
-    <ion-button type="submit" [disabled]="!showDelete" [ngClass]="{'disabled':!showDelete}">Usuń</ion-button>
-        </form>     
-    
+<ion-content class="home-page-component">
+    <ion-header>
+        <ion-toolbar>
+            <ion-title>Strona domowa</ion-title>
+        </ion-toolbar>
+    </ion-header>
+    <ion-content class="home-page-component__container">
+        Witam
+    </ion-content>
 </ion-content>
