@@ -31,5 +31,6 @@
 
         <p class="register-form-component__text-node">Posiadasz już konto?</p>
         <a class="register-form-component__link--login" (click)="navigateLogin()">ZALOGUJ SIĘ</a>
+        <a class="register-form-component__link--error" *ngIf="registerError">{{errorMessage}}</a>
     </form>
 </ion-content>

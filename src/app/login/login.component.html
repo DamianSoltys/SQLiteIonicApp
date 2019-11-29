@@ -11,7 +11,7 @@
     >
         <ion-item>
             <ion-label position="floating">Nazwa użytkownika</ion-label>
-            <ion-input type="text" formControlName="loginName"></ion-input>
+            <ion-input type="text" formControlName="userName"></ion-input>
         </ion-item>
         <ion-item>
             <ion-label position="floating">Hasło użytkownika</ion-label>
@@ -24,5 +24,6 @@
         <a class="form__link--register" (click)="navigateRegister()"
             >ZAREJESTRUJ SIĘ</a
         >
+        <a class="form__text-node--error" *ngIf="loginError">{{errorMessage}}</a>
     </form>
 </ion-content>

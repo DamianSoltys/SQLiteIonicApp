@@ -59,30 +59,52 @@ export class DatabaseService {
     }
 
     public registerUser(userData:User) {
+        let subject = new Subject<any>();
         let data = [userData.userName,userData.password,userData.email];
-        return this.database
+        
+        this.database
             .executeSql(
                 `INSERT INTO user(userName,password,email) VALUES(?,?,?)`,
                 data
             )
             .then(data => {
-                this.getUsers();
-                console.log('user added');
-                console.log(data);
+                if(data) {
+                    this.getUsers();
+                    subject.next(true);
+                } else {
+                    subject.next(false);
+                }
             });
+
+        return subject;
     }
 
-    public loginUser(userData) {
-        let userName;
-        return this.database
+    public loginUser(userData:User) {
+        let subject = new Subject<any>();
+        let userName = userData.userName;
+    
+        this.database
             .executeSql(`SELECT * FROM user WHERE userName= ?`, [userName])
             .then(data => {
                 if (data) {
-                    //costam costam data dupa
+                    let user:User = {
+                        userName:data.rows.item(0).userName,
+                        email:data.rows.item(0).email,
+                        password:data.rows.item(0).password,
+                    }
+
+                    if(user.password == userData.password) {
+                        subject.next(user);
+                    } else {
+                        subject.next(false);
+                    }
+                    
                 } else {
-                    return false;
+                   subject.next(false);
                 }
             });
+
+            return subject;
     }
 
     public getProducts() {

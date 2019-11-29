@@ -1,10 +1,32 @@
+<ion-menu side="start" menuId="first">
+        <ion-header>
+          <ion-toolbar color="primary">
+            <ion-title>Start Menu</ion-title>
+          </ion-toolbar>
+        </ion-header>
+        <ion-content>
+          <ion-list>
+            <ion-item routerLink="/login">LogowanieTEst</ion-item>
+            <ion-item>Menu Item</ion-item>
+            <ion-item>Menu Item</ion-item>
+            <ion-item>Menu Item</ion-item>
+            <ion-item>Menu Item</ion-item>
+          </ion-list>
+        </ion-content>
+      </ion-menu>
+      
+      
+      <ion-router-outlet main></ion-router-outlet>
+
 <ion-content class="home-page-component">
     <ion-header>
         <ion-toolbar>
             <ion-title>Strona domowa</ion-title>
+            <ion-button (click)="penFirst()">Witam</ion-button>
         </ion-toolbar>
     </ion-header>
     <ion-content class="home-page-component__container">
-        Witam
+        
     </ion-content>
 </ion-content>
+

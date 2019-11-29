@@ -20,17 +20,29 @@ export class RegisterComponent implements OnInit {
     password:[],
     checkPassword:[]
   });
+  public registerError = false;
+  public errorMessage = '';
   constructor(private fb:FormBuilder,public navController:NavController,private db:DatabaseService) { }
 
   ngOnInit() {
-    this.db.deleteTableData('user');
+    //this.db.deleteTableData('user');
   }
 
   public registerUser() {
     if(this.registerForm.controls.password.value === this.registerForm.controls.checkPassword.value) {
-      this.db.registerUser(this.registerForm.value);
+      this.db.registerUser(this.registerForm.value).subscribe(response=>{
+        if(response) {
+          this.registerError = false;
+          alert('Rejestracja się powiodła!');
+        } else {
+          this.registerError = true;
+          this.errorMessage = "Rejestacja się nie powiodła!";
+        }
+      })
+      
     } else {
-      console.log('Hasła się powtarzają');
+      this.registerError = true;
+      this.errorMessage = "Hasła nie są takie same!";
     }
   }
 
