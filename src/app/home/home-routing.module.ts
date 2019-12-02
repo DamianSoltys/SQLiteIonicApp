@@ -3,10 +3,10 @@ import { Routes, RouterModule } from '@angular/router';
 
 
 import { HomePage } from './home.page';
+import { CalculatorsComponent } from '../calculators/calculators.component';
+import { FoodListComponent } from '../food-list/food-list.component';
 const routes: Routes = [
-
-  {path: '',
-    component: HomePage}
+  {path: '',component: HomePage},
 ];
 
 @NgModule({

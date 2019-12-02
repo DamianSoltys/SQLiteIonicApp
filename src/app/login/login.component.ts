@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { NavController } from '@ionic/angular';
 import { DatabaseService } from '../services/database.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -15,9 +16,11 @@ export class LoginComponent implements OnInit {
   });
   public loginError = false;
   public errorMessage = '';
-  constructor(private fb:FormBuilder,public navController:NavController,private db:DatabaseService) { }
+  constructor(private fb:FormBuilder,public navController:NavController,private db:DatabaseService,private router:Router) { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.navController.navigateForward('/home');
+  }
 
   public loginUser() {
     console.log(this.loginForm.value);
@@ -25,7 +28,7 @@ export class LoginComponent implements OnInit {
       if(response) {
         this.loginError = false;
         alert(`Witaj ${response.userName}`);
-        this.navController.navigateForward('home');
+        this.navController.navigateForward('/home');
       } else {
         this.loginError = true;
         this.errorMessage = 'Logowanie się nie powiodło!'
