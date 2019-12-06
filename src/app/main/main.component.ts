@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { DatabaseService } from '../services/database.service';
 import { FormBuilder , FormGroup, FormArray, FormControl} from '@angular/forms';
 import { MenuController, NavController } from '@ionic/angular';
@@ -11,7 +11,7 @@ import { MenuController, NavController } from '@ionic/angular';
 })
 export class MainComponent implements OnInit {
 
-  constructor(private router: NavController, private db: DatabaseService, private fb: FormBuilder,private menu: MenuController) { }
+  constructor(private nav: NavController,private router:Router,private activeRoute:ActivatedRoute, private db: DatabaseService, private fb: FormBuilder,private menu: MenuController) { }
 
   ngOnInit() {
     // this.db.getDatabaseState().subscribe(ready=>{
@@ -34,8 +34,10 @@ export class MainComponent implements OnInit {
     this.menu.enable(true, 'custom');
     this.menu.open('custom');
   }
-
+  public navigate(route:string) {
+    this.router.navigateByUrl(`/home/${route}`);
+  }
   public logOut() {
-    this.router.navigateRoot('/login');
+    this.nav.navigateRoot('/login');
   }
 }
