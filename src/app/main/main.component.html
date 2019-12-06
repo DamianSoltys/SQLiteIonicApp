@@ -8,9 +8,7 @@
     <ion-list>
       <ion-item routerLink="/calculators">Kalkulatory</ion-item>
       <ion-item routerLink="/foodList">Historia pożywienia</ion-item>
-      <ion-item>Menu Item</ion-item>
-      <ion-item>Menu Item</ion-item>
-      <ion-item>Menu Item</ion-item>
+      <ion-item (click) = "logOut()">Wyloguj</ion-item>
     </ion-list>
   </ion-content>
 </ion-menu>
@@ -26,7 +24,7 @@
   </ion-toolbar>
 </ion-header>
 <ion-content class="home-page-component__container">
-  <ion-router-outlet></ion-router-outlet>
+<ion-router-outlet></ion-router-outlet>
 </ion-content>
 </ion-content>
 

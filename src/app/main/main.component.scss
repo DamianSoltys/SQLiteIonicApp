@@ -1,9 +1,11 @@
 $tbColor: black;
 $androidcolor:rgb(70, 228, 70);
 
+
 ion-toolbar ion-button{
     color:$tbColor;
 }
+
 ion-icon[name="logo-android"]{
    color:$androidcolor;
    font-size: 1.5em;   
@@ -11,7 +13,6 @@ ion-icon[name="logo-android"]{
 ion-toolbar{
     border-bottom:1px solid black;   
 }
-
 ion-item:hover{
  opacity: 0.8;
  color:grey;
@@ -35,5 +36,5 @@ ion-button{
 }
 
 .disabled{
-    display:none;
+    display:none
 }

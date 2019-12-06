@@ -9,31 +9,14 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 
-import { SQLitePorter } from '@ionic-native/sqlite-porter/ngx';
-import { SQLite } from '@ionic-native/sqlite/ngx';
-
-import { HttpClientModule } from '@angular/common/http';
-import { IonicGestureConfig } from '../gestures/ionic-gesture-config';
-
-import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
-
-
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
-  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule,HttpClientModule],
+  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule],
   providers: [
     StatusBar,
     SplashScreen,
-    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    {
-      provide: IonicGestureConfig,
-      useClass: IonicGestureConfig
-    },  
-    SQLite,
-    SQLitePorter,
-    InAppBrowser
-    
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]
 })
