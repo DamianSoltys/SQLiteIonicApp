@@ -26,16 +26,9 @@ export class MainComponent implements OnInit {
     this.menu.open('first');
   }
 
-  public openEnd() {
-    this.menu.open('end');
-  }
-
-  public openCustom() {
-    this.menu.enable(true, 'custom');
-    this.menu.open('custom');
-  }
   public navigate(route:string) {
     this.router.navigateByUrl(`/home/${route}`);
+    this.menu.close('first');
   }
   public logOut() {
     this.nav.navigateRoot('/login');

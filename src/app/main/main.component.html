@@ -20,8 +20,10 @@
 <ion-content class="home-page-component">
 <ion-header>
   <ion-toolbar>
-      <ion-title>Strona domowa</ion-title>
-      <ion-button (click)="penFirst()">Witam</ion-button>
+      <ion-title slot="start">Strona domowa</ion-title>
+      <ion-item slot="end">
+          <ion-icon name="apps" color="primary" (click)="penFirst()">Witam</ion-icon>
+      </ion-item>
   </ion-toolbar>
 </ion-header>
 <ion-content class="home-page-component__container">

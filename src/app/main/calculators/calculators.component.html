@@ -1,3 +1,52 @@
-<p>
-  calculators works!
-</p>
+<ion-content>
+    <ngx-select-dropdown #calculatorSelect (change)="selectionChanged($event)" [multiple]="false" [config]="config" [options]="calculatorOptions"></ngx-select-dropdown>
+  <ion-content *ngIf="showOptions.BMI">
+   <form formGroup="bmiForm" (ngSubmit)="onSubmit('bmi')">
+      <ion-item>
+        <ion-label position="floating">Wzrost(cm)</ion-label>
+        <ion-input type="number" formControlName="height"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Waga(kg)</ion-label>
+        <ion-input type="number" formControlName="weight"></ion-input>
+      </ion-item>
+      <div>
+          <ion-button expand="block" type="button">Oblicz</ion-button>
+      </div>
+   </form>
+   <div>
+      <p>Twój współczynnik BMI to:</p>
+    </div> 
+  </ion-content>
+  <ion-content *ngIf="showOptions.KCAL">
+    <p>Twoje obliczenia będą dodane do twojej historii</p>
+    <form formGroup="kcalForm" (ngSubmit)="onSubmit('kcal')">
+      <div>
+          <ion-label position="floating" >Produkt</ion-label>
+          <ngx-select-dropdown formControlName="product" #productSelect (change)="productChanged($event)" [multiple]="false" [config]="config" [options]="productOptions"></ngx-select-dropdown>
+      </div>
+      <div>
+        <ion-button expand="block" type="button">Dodaj</ion-button>
+      </div>
+    </form>
+    <p>Obliczone wartości odżywcze:</p>
+  </ion-content>
+  <ion-content *ngIf="showOptions.WEIGHT">
+    <form formGroup="weightForm" (ngSubmit)="onSubmit('weight')">
+        <ion-item>
+            <ion-label position="floating" for="height">Wzrost(cm)</ion-label>
+          <ion-input name="height" type="number" formControlName="height"></ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-label position="floating" for="age">Wiek</ion-label>
+          <ion-input name="age" type="number" formControlName="age"></ion-input>
+        </ion-item>
+        <div>
+            <ion-button expand="block" type="button">Oblicz</ion-button>
+          </div>
+    </form>
+    <div>
+      <p>Twoja idealna waga to:</p>
+    </div> 
+  </ion-content>
+</ion-content>
