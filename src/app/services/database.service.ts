@@ -5,6 +5,8 @@ import { Platform } from '@ionic/angular';
 import { SQLitePorter } from '@ionic-native/sqlite-porter/ngx';
 import { HttpClient } from '@angular/common/http';
 import { User } from '../register/register.component';
+import { Meal } from '../main/food-list/food-list.component';
+import { Product, History } from '../main/calculators/calculators.component';
 
 export interface TelInfo {
     telId: number;
@@ -19,6 +21,9 @@ export interface TelInfo {
 })
 export class DatabaseService {
     private database: SQLiteObject;
+    public getMealData = new Subject<any>();
+    public getHistoryData = new Subject<any>();
+    public getProductData = new Subject<any>();
     private dbReady: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(
         false
     );
@@ -68,12 +73,14 @@ export class DatabaseService {
                 data
             )
             .then(data => {
+                console.log(data);
                 if(data) {
-                    this.getUsers();
                     subject.next(true);
                 } else {
                     subject.next(false);
                 }
+            },reject=>{
+                subject.next(false);
             });
 
         return subject;
@@ -84,10 +91,11 @@ export class DatabaseService {
         let userName = userData.userName;
     
         this.database
-            .executeSql(`SELECT * FROM user WHERE userName= ?`, [userName])
+            .executeSql(`SELECT * FROM user WHERE userName = ?`, [userName])
             .then(data => {
-                if (data) {
+                if (data.rows.length > 0) {
                     let user:User = {
+                        userId:data.rows.item(0).userId,
                         userName:data.rows.item(0).userName,
                         email:data.rows.item(0).email,
                         password:data.rows.item(0).password,
@@ -95,6 +103,7 @@ export class DatabaseService {
 
                     if(user.password == userData.password) {
                         subject.next(user);
+                        localStorage.setItem('user',JSON.stringify(user));
                     } else {
                         subject.next(false);
                     }
@@ -102,22 +111,50 @@ export class DatabaseService {
                 } else {
                    subject.next(false);
                 }
+            },reject=>{
+                console.log(reject);
+                subject.next(false);
             });
 
-            return subject;
+        return subject;
     }
 
-    public getProducts() {
-        return this.database
-            .executeSql(`SELECT * FROM product`, [])
-            .then(products => {
-                if (products.rows.length > 0) {
-                    for (let i = 0; i < products.rows.length; i++) {
-                        //ladowanko ehhe
+    public getHistory() {
+        let subject = new Subject<any>();
+        this.database
+            .executeSql('SELECT * FROM calculateHistory', [])
+            .then(data => {
+                let history: History[] = [];
+
+                if (data.rows.length > 0) {
+                    for (let i = 0; i < data.rows.length; i++) {
+                        history.push({
+                            calculateId:data.rows.item(i).calculateId,
+                            userId:data.rows.item(i).userId,
+                            calculateName:data.rows.item(i).calculateName,
+                            BMI:data.rows.item(i).BMI,
+                            weight:data.rows.item(i).weight,
+                            height:data.rows.item(i).height,
+                            age:data.rows.item(i).age,
+                            carbs:data.rows.item(i).carbs,
+                            protein:data.rows.item(i).protein,  
+                            fat:data.rows.item(i).fat,  
+                            kcal:data.rows.item(i).kcal,
+                            date:data.rows.item(i).date,                           
+                        });
                     }
+                    subject.next(history);
+                } else {
+                    subject.next(false);
                 }
+                
+            },reject=>{
+                subject.next(false);
             });
+        return subject;
     }
+
+
 
     public deleteTableData(tableName) {
         return this.database.executeSql(`DELETE FROM ${tableName}`);
@@ -133,16 +170,128 @@ export class DatabaseService {
         });
     }
 
-    public setProduct(productData) {
-        let data = [];
-        return this.database
+    public getMeals() {
+        let subject = new Subject<any>();
+        this.database
+            .executeSql('SELECT * FROM meal', [])
+            .then(data => {
+                let meals: Meal[] = [];
+
+                if (data.rows.length > 0) {
+                    for (let i = 0; i < data.rows.length; i++) {
+                        meals.push({
+                            mealId:data.rows.item(i).mealId,
+                            userId:data.rows.item(i).userId,
+                            name:data.rows.item(i).mealName,
+                            carbohydrates:data.rows.item(i).carbs,
+                            protein:data.rows.item(i).protein,
+                            kcal:data.rows.item(i).kcal,
+                            fat:data.rows.item(i).fat,
+                            picture:data.rows.item(i).picture,
+                            date:data.rows.item(i).date,                            
+                        });
+                    }
+                    subject.next(meals);
+                } else {
+                    subject.next(false);
+                }
+                
+            },reject=>{
+                subject.next(false);
+            });
+            return subject;
+    }
+
+    public getProducts() {
+        let subject = new Subject<any>();
+        this.database
+            .executeSql('SELECT * FROM product', [])
+            .then(data => {
+                let products: Product[] = [];
+
+                if (data.rows.length > 0) {
+                    for (let i = 0; i < data.rows.length; i++) {
+                        products.push({
+                            productName:data.rows.item(i).productName,
+                            carbs:data.rows.item(i).carbs,
+                            protein:data.rows.item(i).protein,
+                            kcal:data.rows.item(i).kcal,
+                            fat:data.rows.item(i).fat,                                               
+                        });
+                    }
+                    subject.next(products);
+                } else {
+                    subject.next(false);
+                }
+                
+            },reject=>{
+                subject.next(false);
+            });
+            return subject;
+    }
+
+    public setMeal(mealData:Meal) {
+        let subject = new Subject<any>();
+        let data = Object.values(mealData);
+
+        if(mealData.userId) {
+            this.database
             .executeSql(
-                `INSERT INTO product(productName,wegle,bialko,tluszcze,kcal) VALUES (?,?,?,?,?)`,
+                `INSERT INTO meal(userId,mealName,carbs,protein,fat,kcal,picture,date) VALUES (?,?,?,?,?,?,?,?)`,
                 data
             )
             .then(data => {
-                //costam loadproducts
+                this.getMealData.next(true);
+                subject.next(true);
+            },reject=>{
+                console.log(reject);
+                subject.next(false);
             });
+        } else {
+            console.log('Brak userId');
+            subject.next(false);
+        }
+        
+        return subject;
+    }
+
+    public setHistory(historyData:History) {
+        let subject = new Subject<any>();
+        let data = Object.values(historyData);
+
+        if(historyData.userId) {
+            this.database
+            .executeSql(
+                `INSERT INTO calculateHistory(userId,calculateName,BMI,weight,height,age,kcal,carbs,protein,fat,date) VALUES (?,?,?,?,?,?,?,?,?,?,?)`,
+                data
+            )
+            .then(data => {
+                this.getHistoryData.next(true);
+                subject.next(true);
+            },reject=>{
+                subject.next(false);
+            });
+        } else {
+            subject.next(false);
+        }
+        
+        return subject;
+    }
+
+    public deleteMeal(mealId:number) {
+        this.database
+            .executeSql('DELETE FROM meal WHERE mealId = ?', [mealId])
+            .then(() => {
+                this.getMealData.next(true);
+         });
+    }
+
+    public deleteHistory(calculateHistoryId:number) {
+        this.database
+            .executeSql('DELETE FROM calculateHistory WHERE calculateId = ?', [calculateHistoryId])
+            .then(() => {
+                this.getHistoryData.next(true);
+        });
     }
 
     public getDatabaseState() {

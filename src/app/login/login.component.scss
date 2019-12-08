@@ -7,4 +7,10 @@
         align-content: center;
         justify-content: center;
     }
+    .form__text-node--error {
+        display:flex;
+        align-content: center;
+        justify-content: center;
+        color:red;
+    }
 }

@@ -18,12 +18,12 @@
           <ion-input type="password" formControlName="password"></ion-input>
       </ion-item>
       <ion-button color="primary" expand="block" type="submit"
-          >Zaloguj</ion-button
+          [disabled]="!loginForm.valid">Zaloguj</ion-button
       >
       <p class="form__text-node">Nie posiadasz jeszcze konta?</p>
       <a class="form__link--register" (click)="navigateRegister()"
           >ZAREJESTRUJ SIĘ</a
       >
-      <a class="form__text-node--error" *ngIf="loginError">{{errorMessage}}</a>
+      <p class="form__text-node--error" *ngIf="loginError">{{errorMessage}}</p>
   </form>
 </ion-content>

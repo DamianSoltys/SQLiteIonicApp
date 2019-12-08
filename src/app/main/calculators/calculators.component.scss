@@ -1,0 +1,21 @@
+.bmi-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.error-container {
+    .error-container__text {
+        display:flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        &--success {
+            color:green;
+        }
+        &--error {
+            color:red;
+        }
+    }
+}

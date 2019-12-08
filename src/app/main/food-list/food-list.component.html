@@ -1,3 +1,63 @@
-<p>
-  food-list works!
-</p>
+
+
+<ion-content>
+  <ion-content *ngIf="isHistory">
+    <div *ngIf="mealList">
+      <div *ngFor="let meal of mealList" class="meal-list">
+        <div class="picture-container" *ngIf="meal.picture">
+          <ion-img [src]="meal.picture" class="picture"></ion-img>
+        </div>
+        <p class="meal-list__text">Nazwa:{{meal.name}}</p>
+        <p class="meal-list__text">Ilosć białka:{{meal.protein}}</p>
+        <p class="meal-list__text">Ilosć węglowodanów:{{meal.carbohydrates}}</p>
+        <p class="meal-list__text">Ilosć tłuszczów:{{meal.fat}}</p>
+        <p class="meal-list__text">Ilosć kalorii:{{meal.kcal}}</p>
+      </div>
+    </div>
+    <div *ngIf="!mealList" class="empty-list">
+      <p>Nie masz żadnych dodanych posiłków</p>
+    </div>
+    <div>
+      <ion-button expand="block" (click)="switchView('form')">Dodaj posiłek</ion-button>
+    </div>
+  </ion-content>
+  <ion-content *ngIf="!isHistory">
+      <div class="picture-container">
+        <ion-img [src]="picture" *ngIf="picture" class="picture"></ion-img>
+      </div>
+      <div *ngIf="!picture">
+          <ion-button expand="block" type="button" (click)="addPhoto()">Dodaj zdjęcie</ion-button>
+      </div>
+    <form [formGroup]="addForm" (ngSubmit)="onSubmit()" *ngIf="picture">
+      <ion-item>
+        <ion-label position="floating">Nazwa posiłku</ion-label>
+        <ion-input type="text" formControlName="name"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Ilość białka</ion-label>
+        <ion-input type="number" formControlName="protein"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Ilość tłuszczu</ion-label>
+        <ion-input type="number" formControlName="fat"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Ilość węglowodanów</ion-label>
+        <ion-input type="number" formControlName="carbohydrates"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Ilość kalorii(kcal)</ion-label>
+        <ion-input type="number" formControlName="kcal"></ion-input>
+      </ion-item>
+      <div *ngIf="picture">
+          <ion-button expand="block" type="button" (click)="addPhoto()">Zmień zdjęcie</ion-button>
+      </div>
+      <div>
+        <ion-button expand="block" type="submit" [disabled]="!addForm.valid">Dodaj posiłek</ion-button>
+      </div>
+   </form>
+   <div>
+    <ion-button expand="block" (click)="switchView('history')">Pokaż historie</ion-button>
+  </div>
+  </ion-content>
+</ion-content>

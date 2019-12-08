@@ -26,11 +26,10 @@
           <ion-input type="password" formControlName="checkPassword"></ion-input>
       </ion-item>
       <ion-button expand="block" color="primary" type="submit"
-          >Zarejestruj</ion-button
+          [disabled]="!registerForm.valid">Zarejestruj</ion-button
       >
 
       <p class="register-form-component__text-node">Posiadasz już konto?</p>
       <a class="register-form-component__link--login" (click)="navigateLogin()">ZALOGUJ SIĘ</a>
-      <a class="register-form-component__link--error" *ngIf="registerError">{{errorMessage}}</a>
   </form>
 </ion-content>

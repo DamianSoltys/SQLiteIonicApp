@@ -31,6 +31,7 @@ export class MainComponent implements OnInit {
     this.menu.close('first');
   }
   public logOut() {
+    localStorage.clear();
     this.nav.navigateRoot('/login');
   }
 }

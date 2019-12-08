@@ -1,7 +1,7 @@
 <ion-content>
     <ngx-select-dropdown #calculatorSelect (change)="selectionChanged($event)" [multiple]="false" [config]="config" [options]="calculatorOptions"></ngx-select-dropdown>
   <ion-content *ngIf="showOptions.BMI">
-   <form formGroup="bmiForm" (ngSubmit)="onSubmit('bmi')">
+   <form [formGroup]="bmiForm" (ngSubmit)="onSubmit('bmi')">
       <ion-item>
         <ion-label position="floating">Wzrost(cm)</ion-label>
         <ion-input type="number" formControlName="height"></ion-input>
@@ -11,28 +11,46 @@
         <ion-input type="number" formControlName="weight"></ion-input>
       </ion-item>
       <div>
-          <ion-button expand="block" type="button">Oblicz</ion-button>
+          <ion-button expand="block" type="button" (click)="calculateBMI()">Oblicz</ion-button>
+      </div>
+      <div>
+          <ion-button expand="block" type="submit">Zapisz</ion-button>
       </div>
    </form>
-   <div>
-      <p>Twój współczynnik BMI to:</p>
+   <div *ngIf="BMI" class="bmi-container">
+      <p>Twój współczynnik BMI to:{{BMI}}</p>
+      <p>Masz:{{bmiText}}</p>
     </div> 
   </ion-content>
   <ion-content *ngIf="showOptions.KCAL">
-    <p>Twoje obliczenia będą dodane do twojej historii</p>
-    <form formGroup="kcalForm" (ngSubmit)="onSubmit('kcal')">
+    <form [formGroup]="kcalForm" (ngSubmit)="onSubmit('kcal')">
       <div>
-          <ion-label position="floating" >Produkt</ion-label>
+          <ion-label position="floating" >Produkt(100g)</ion-label>
           <ngx-select-dropdown formControlName="product" #productSelect (change)="productChanged($event)" [multiple]="false" [config]="config" [options]="productOptions"></ngx-select-dropdown>
       </div>
       <div>
-        <ion-button expand="block" type="button">Dodaj</ion-button>
+          <ion-button expand="block" (click)="addProduct()" type="button">Dodaj</ion-button>
+      </div>
+      <div>
+        <ion-button expand="block" type="submit">Zapisz</ion-button>
       </div>
     </form>
-    <p>Obliczone wartości odżywcze:</p>
+    <div *ngIf="productSelectList">
+      <p class="product-selected">Lista wybranych produktów</p>
+      <div *ngFor="let product of productSelectList,let i = index" class="product-list">
+        <p class="product-text">{{i+1}}.Nazwa:{{product.productName}}</p>
+      </div>
+        <div *ngIf="calculatedData">
+            <p>Obliczone wartości odżywcze</p>
+            <p>Ilość białka:{{calculatedData.protein}}gram</p>
+            <p>Ilość węglowodanów:{{calculatedData.carbs}}gram</p>
+            <p>Ilość tłuszczów:{{calculatedData.fat}}gram</p>
+            <p>Ilość kalorii:{{calculatedData.kcal}}kcal</p>
+        </div>
+    </div>
   </ion-content>
   <ion-content *ngIf="showOptions.WEIGHT">
-    <form formGroup="weightForm" (ngSubmit)="onSubmit('weight')">
+    <form [formGroup]="weightForm" (ngSubmit)="onSubmit('weight')">
         <ion-item>
             <ion-label position="floating" for="height">Wzrost(cm)</ion-label>
           <ion-input name="height" type="number" formControlName="height"></ion-input>
@@ -42,11 +60,14 @@
           <ion-input name="age" type="number" formControlName="age"></ion-input>
         </ion-item>
         <div>
-            <ion-button expand="block" type="button">Oblicz</ion-button>
+            <ion-button expand="block" (click)="calculateIdealWeight()" type="button">Oblicz</ion-button>
+          </div>
+        <div>
+            <ion-button expand="block" type="submit">Zapisz</ion-button>
           </div>
     </form>
-    <div>
-      <p>Twoja idealna waga to:</p>
-    </div> 
+    <div *ngIf="idealWeight" class="bmi-container">
+        <p>Twója idealna waga to:{{idealWeight}}kg</p>
+      </div> 
   </ion-content>
 </ion-content>

@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { NavController } from '@ionic/angular';
 import { DatabaseService } from '../services/database.service';
 export interface User {
+  userId:number,
   userName:string,
   email:string,
   password:string,
@@ -15,13 +16,11 @@ export interface User {
 })
 export class RegisterComponent implements OnInit {
   public registerForm = this.fb.group({
-    userName:[],
-    email:[],
-    password:[],
-    checkPassword:[]
+    userName:[null,[Validators.required]],
+    email:[null,[Validators.required]],
+    password:[null,[Validators.required]],
+    checkPassword:[null,[Validators.required]]
   });
-  public registerError = false;
-  public errorMessage = '';
   constructor(private fb:FormBuilder,public navController:NavController,private db:DatabaseService) { }
 
   ngOnInit() {
@@ -32,17 +31,14 @@ export class RegisterComponent implements OnInit {
     if(this.registerForm.controls.password.value === this.registerForm.controls.checkPassword.value) {
       this.db.registerUser(this.registerForm.value).subscribe(response=>{
         if(response) {
-          this.registerError = false;
           alert('Rejestracja się powiodła!');
         } else {
-          this.registerError = true;
-          this.errorMessage = "Rejestacja się nie powiodła!";
+          alert('Rejestacja się nie powiodła!');
         }
       })
       
     } else {
-      this.registerError = true;
-      this.errorMessage = "Hasła nie są takie same!";
+        alert('Hasła nie są takie same!');
     }
   }
 

@@ -12,6 +12,7 @@ import { SQLitePorter } from '@ionic-native/sqlite-porter/ngx';
 import { SQLite } from '@ionic-native/sqlite/ngx';
 import { HttpClientModule } from '@angular/common/http';
 import { FormBuilder } from '@angular/forms';
+import { AuthGuardService } from './services/auth-guard.service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -23,7 +24,8 @@ import { FormBuilder } from '@angular/forms';
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     SQLitePorter,
     SQLite,
-    FormBuilder
+    FormBuilder,
+    AuthGuardService
   ],
   bootstrap: [AppComponent]
 })

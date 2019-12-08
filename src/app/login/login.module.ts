@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { LoginRoutingModule } from './login-routing.module';
 import { IonicModule } from '@ionic/angular';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { LoginComponent } from './login.component';
 
 
@@ -13,7 +13,8 @@ import { LoginComponent } from './login.component';
     CommonModule,
     LoginRoutingModule,
     IonicModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    FormsModule
   ]
 })
 export class LoginModule { }
