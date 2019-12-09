@@ -91,7 +91,7 @@ export class FoodListComponent implements OnInit {
         fat:this.addForm.controls.fat.value,
         kcal:this.addForm.controls.kcal.value,
         picture:this.picture,
-        date:new Date().toISOString().slice(0, 10);
+        date:new Date().toISOString().slice(0, 10),
       }
 
       this.db.setMeal(mealData).subscribe(response=>{
