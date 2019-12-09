@@ -258,7 +258,8 @@ export class DatabaseService {
     public setHistory(historyData:History) {
         let subject = new Subject<any>();
         let data = Object.values(historyData);
-
+        alert(historyData.BMI)
+        alert(historyData.date)
         if(historyData.userId) {
             this.database
             .executeSql(
@@ -269,6 +270,7 @@ export class DatabaseService {
                 this.getHistoryData.next(true);
                 subject.next(true);
             },reject=>{
+                console.log(reject)
                 subject.next(false);
             });
         } else {

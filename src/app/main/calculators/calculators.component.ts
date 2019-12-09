@@ -37,10 +37,10 @@ export interface History {
   weight:number,
   height:number,
   age:number,
-  kcal:number,
   carbs:number,
   protein:number,
   fat:number,
+  kcal:number,
   date:string,
 }
 @Component({
@@ -120,7 +120,7 @@ export class CalculatorsComponent implements OnInit {
         let historyData:History = {
           userId:userIds,
           calculateName:'BMI',
-          BMI:this.BMI,
+          BMI:Number(this.BMI.toFixed(2)),
           weight:this.bmiForm.controls.weight.value,
           height:this.bmiForm.controls.height.value,
           age:0,

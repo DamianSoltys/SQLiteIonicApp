@@ -32,6 +32,7 @@ export class RegisterComponent implements OnInit {
       this.db.registerUser(this.registerForm.value).subscribe(response=>{
         if(response) {
           alert('Rejestracja się powiodła!');
+          this.navController.navigateBack('/login');
         } else {
           alert('Rejestacja się nie powiodła!');
         }
