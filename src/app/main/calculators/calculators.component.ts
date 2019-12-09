@@ -124,10 +124,10 @@ export class CalculatorsComponent implements OnInit {
           weight:this.bmiForm.controls.weight.value,
           height:this.bmiForm.controls.height.value,
           age:0,
-          kcal:0,
-          protein:0,
           carbs:0,
+          protein:0,
           fat:0,
+          kcal:0,
           date:new Date().toISOString().slice(0, 10),
         }
         this.setHistoryData(historyData);
@@ -142,10 +142,10 @@ export class CalculatorsComponent implements OnInit {
           weight:0,
           height:0,
           age:0,
-          kcal:this.calculatedData.kcal,
-          protein:this.calculatedData.protein,
           carbs:this.calculatedData.carbs,
+          protein:this.calculatedData.protein,
           fat:this.calculatedData.fat,
+          kcal:this.calculatedData.kcal,                           
           date:new Date().toISOString().slice(0, 10),
         }
         this.setHistoryData(historyData);
@@ -160,10 +160,10 @@ export class CalculatorsComponent implements OnInit {
           weight:this.idealWeight,
           height:this.weightForm.controls.height.value,
           age:this.weightForm.controls.age.value,
-          kcal:0,
-          protein:0,
           carbs:0,
+          protein:0,
           fat:0,
+          kcal:0,
           date:new Date().toISOString().slice(0, 10),
         }
         this.setHistoryData(historyData);

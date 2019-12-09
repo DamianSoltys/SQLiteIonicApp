@@ -133,14 +133,14 @@ export class DatabaseService {
                             userId:data.rows.item(i).userId,
                             calculateName:data.rows.item(i).calculateName,
                             BMI:data.rows.item(i).BMI,
-                            weight:data.rows.item(i).weight,
-                            height:data.rows.item(i).height,
+                            weight:data.rows.item(i).userWeight,
+                            height:data.rows.item(i).userHeight,
                             age:data.rows.item(i).age,
                             carbs:data.rows.item(i).carbs,
                             protein:data.rows.item(i).protein,  
                             fat:data.rows.item(i).fat,  
                             kcal:data.rows.item(i).kcal,
-                            date:data.rows.item(i).date,                           
+                            date:data.rows.item(i).historyDate,                           
                         });
                     }
                     subject.next(history);
@@ -262,7 +262,7 @@ export class DatabaseService {
         if(historyData.userId) {
             this.database
             .executeSql(
-                `INSERT INTO calculateHistory(userId,calculateName,BMI,weight,height,age,kcal,carbs,protein,fat,date) VALUES (?,?,?,?,?,?,?,?,?,?,?)`,
+                `INSERT INTO calculateHistory(userId,calculateName,BMI,userWeight,userHeight,age,carbs,protein,fat,kcal,historyDate) VALUES (?,?,?,?,?,?,?,?,?,?,?)`,
                 data
             )
             .then(data => {

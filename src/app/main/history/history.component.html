@@ -1,17 +1,20 @@
 <ion-content *ngIf="historyList.length">
   <div *ngFor="let history of historyList">
-    <div *ngIf="history.calculateName === 'BMI'" class="container-type">
+    <div *ngIf="history.calculateName == 'BMI'" class="container-type">
       <p>Twoje BMI to:{{history.BMI}}</p>
+      <p>Data dodania:{{history.date}}</p>
     </div>
-    <div *ngIf="history.calculateName === 'KCAL'" class="container-type">
+    <div *ngIf="history.calculateName == 'KCAL'" class="container-type">
         <p>Twoje obliczone kalorie:</p>
         <p>Ilość białka:{{history.protein}}</p>
         <p>Ilość węglowodanów:{{history.carbs}}</p>
         <p>Ilość tłuszczów:{{history.fat}}</p>
         <p>Ilość kalorii:{{history.kcal}}</p>
+        <p>Data dodania:{{history.date}}</p>
     </div>
-    <div *ngIf="history.calculateName === 'WEIGHT'" class="container-type">
+    <div *ngIf="history.calculateName == 'WEIGHT'" class="container-type">
         <p>Twoja idealna waga to:{{history.weight}}</p>
+        <p>Data dodania:{{history.date}}</p>
     </div>
   </div>
 </ion-content>

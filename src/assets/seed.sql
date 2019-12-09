@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS user(userId INTEGER PRIMARY KEY AUTOINCREMENT ,userName TEXT,password TEXT,email TEXT);
 CREATE TABLE IF NOT EXISTS product(productId INTEGER PRIMARY KEY AUTOINCREMENT,productName TEXT,carbs NUMBER,protein NUMBER,fat NUMBER,kcal NUMBER);
-CREATE TABLE IF NOT EXISTS calculateHistory(calculateId INTEGER PRIMARY KEY AUTOINCREMENT,userId NUMBER,calculateName TEXT,BMI NUMBER,weight NUMBER,height NUMBER,age NUMBER,carbs NUMBER,protein NUMBER,fat NUMBER,kcal NUMBER,date TEXT);
+CREATE TABLE IF NOT EXISTS calculateHistory(calculateId INTEGER PRIMARY KEY AUTOINCREMENT,userId NUMBER,calculateName TEXT,BMI NUMBER,userWeight NUMBER,userHeight NUMBER,age NUMBER,carbs NUMBER,protein NUMBER,fat NUMBER,kcal NUMBER,historyDate TEXT);
 CREATE TABLE IF NOT EXISTS meal(mealId INTEGER PRIMARY KEY AUTOINCREMENT,userId NUMBER,mealName TEXT,carbs NUMBER,protein NUMBER,fat NUMBER,kcal NUMBER,picture TEXT,date TEXT);
 
 INSERT INTO product(productName,carbs,protein,fat,kcal) VALUES ( "Kromka chleba" ,24,3.4,4.5,200);
