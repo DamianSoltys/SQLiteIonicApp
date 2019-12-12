@@ -31,8 +31,8 @@ export class FoodListComponent implements OnInit {
     destinationType: this.camera.DestinationType.DATA_URL,
     encodingType: this.camera.EncodingType.JPEG,
     mediaType: this.camera.MediaType.PICTURE,
-    targetHeight:200,
-    targetWidth:200
+    targetHeight:300,
+    targetWidth:300
   }
 
   public picture:any;

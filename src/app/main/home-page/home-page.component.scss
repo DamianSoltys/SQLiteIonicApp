@@ -1,4 +1,10 @@
-.text-node{
-    text-align: center;
-    font-weight: bold;
+.home-component {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    .text-node{
+        text-align: center;
+        font-weight: bold;
+    }
 }

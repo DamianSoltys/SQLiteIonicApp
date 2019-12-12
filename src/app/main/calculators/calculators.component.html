@@ -1,6 +1,6 @@
 <ion-content>
     <ngx-select-dropdown #calculatorSelect (change)="selectionChanged($event)" [multiple]="false" [config]="config" [options]="calculatorOptions"></ngx-select-dropdown>
-  <ion-content *ngIf="showOptions.BMI">
+  <ion-content *ngIf="showOptions.BMI" class="calculator-container">
    <form [formGroup]="bmiForm" (ngSubmit)="onSubmit('bmi')">
       <ion-item>
         <ion-label position="floating">Wzrost(cm)</ion-label>
@@ -22,10 +22,10 @@
       <p>Masz:{{bmiText}}</p>
     </div> 
   </ion-content>
-  <ion-content *ngIf="showOptions.KCAL">
+  <ion-content *ngIf="showOptions.KCAL" class="calculator-container">
     <form [formGroup]="kcalForm" (ngSubmit)="onSubmit('kcal')">
-      <div>
-          <ion-label position="floating" >Produkt(100g)</ion-label>
+      <div class="product-select">
+          <ion-label class="product-select__label" position="floating" >Produkt(100g)</ion-label>
           <ngx-select-dropdown formControlName="product" #productSelect (change)="productChanged($event)" [multiple]="false" [config]="config" [options]="productOptions"></ngx-select-dropdown>
       </div>
       <div>
@@ -49,7 +49,7 @@
         </div>
     </div>
   </ion-content>
-  <ion-content *ngIf="showOptions.WEIGHT">
+  <ion-content *ngIf="showOptions.WEIGHT" class="calculator-container">
     <form [formGroup]="weightForm" (ngSubmit)="onSubmit('weight')">
         <ion-item>
             <ion-label position="floating" for="height">Wzrost(cm)</ion-label>

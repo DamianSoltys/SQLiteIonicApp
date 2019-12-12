@@ -1,8 +1,19 @@
-.bmi-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+
+.calculator-container {
+    border-top: 3px solid darkblue;
+    .bmi-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .product-select {
+        margin-top: 10px;
+        .product-select__label {
+            padding-left: 10px;
+        }
+    }
 }
 
 .error-container {
