@@ -4,8 +4,8 @@ import { CommonModule } from '@angular/common';
 import { MapRoutingModule } from './map-routing.module';
 import { MapComponent } from './map.component';
 import { IonicModule } from '@ionic/angular';
-import { AgmCoreModule } from '@agm/core';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
+import { GoogleMaps } from '@ionic-native/google-maps';
 
 @NgModule({
   declarations: [MapComponent],
@@ -13,12 +13,10 @@ import { Geolocation } from '@ionic-native/geolocation/ngx';
     CommonModule,
     MapRoutingModule,
     IonicModule,
-    AgmCoreModule.forRoot({
-      apiKey:'AIzaSyDymmSbQ_6KBgygpEZwcztemgH3HXTOYrI',
-    })
   ],
   providers:[
-    Geolocation
+    Geolocation,
+    GoogleMaps
   ]
 
 })

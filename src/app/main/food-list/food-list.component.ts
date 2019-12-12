@@ -4,6 +4,7 @@ import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import { FormBuilder, Validators } from '@angular/forms';
 import { DatabaseService } from 'src/app/services/database.service';
 import { User } from 'src/app/register/register.component';
+import { ToastsService } from 'src/app/services/toasts.service';
 export enum SwitchOptions {
   HISTORY = 'history',
   FORM = 'form'
@@ -29,7 +30,9 @@ export class FoodListComponent implements OnInit {
     quality: 100,
     destinationType: this.camera.DestinationType.DATA_URL,
     encodingType: this.camera.EncodingType.JPEG,
-    mediaType: this.camera.MediaType.PICTURE
+    mediaType: this.camera.MediaType.PICTURE,
+    targetHeight:200,
+    targetWidth:200
   }
 
   public picture:any;
@@ -48,7 +51,7 @@ export class FoodListComponent implements OnInit {
   });
 
   
-  constructor(public platform:Platform,private camera: Camera,private fb:FormBuilder,private db:DatabaseService) { }
+  constructor(public platform:Platform,private camera: Camera,private fb:FormBuilder,private db:DatabaseService,private toastCtrl:ToastsService) { }
 
   ngOnInit() {
     this.platform.ready().then(()=>{
@@ -97,14 +100,14 @@ export class FoodListComponent implements OnInit {
       this.db.setMeal(mealData).subscribe(response=>{
         console.log(response)
         if(response) {
-          alert('Posiłek został pomyślnie dodany');
+          this.toastCtrl.showToast('Posiłek został pomyślnie dodany');
           this.switchView('history');
         } else {
-          alert('Nie udało się dodać posiłku');
+          this.toastCtrl.showToast('Nie udało się dodać posiłku');
         }
       });
     } else {
-      alert('Nie udało się dodać posiłku');
+      this.toastCtrl.showToast('Nie udało się dodać posiłku');
     }
   }
 

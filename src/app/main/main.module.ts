@@ -11,6 +11,7 @@ import { CalculatorsComponent } from './calculators/calculators.component';
 import { FoodListComponent } from './food-list/food-list.component';
 import { HistoryModule } from './history/history.module';
 import { MapModule } from './map/map.module';
+import { HomePageModule } from './home-page/home-page.module';
 
 
 @NgModule({
@@ -23,7 +24,8 @@ import { MapModule } from './map/map.module';
     CalculatorsModule,
     FoodListModule,
     HistoryModule,
-    MapModule
+    MapModule,
+    HomePageModule
   ],
 })
 export class MainModule { }

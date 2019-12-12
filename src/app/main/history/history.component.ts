@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { DatabaseService } from 'src/app/services/database.service';
 import { History } from '../calculators/calculators.component';
+import { ToastsService } from 'src/app/services/toasts.service';
 
 @Component({
   selector: 'app-history',
@@ -9,10 +10,20 @@ import { History } from '../calculators/calculators.component';
 })
 export class HistoryComponent implements OnInit {
   public historyList:History[] = [];
-  constructor(private db:DatabaseService) { }
+  constructor(private db:DatabaseService,private toastCtr:ToastsService) { }
 
   ngOnInit() {
     this.getHistoryData();
+
+    this.db.getHistoryData.subscribe(response=>{
+      if(response) {
+        this.getHistoryData();
+      }
+    });
+  }
+
+  ionViewWillEnter() {
+    //this.getHistoryData();
   }
 
   public getHistoryData() {
@@ -21,7 +32,7 @@ export class HistoryComponent implements OnInit {
       if(response) {
         this.historyList = response;
       }else {
-        //alert('Brak historii');
+        this.toastCtr.showToast('Brak historii');
       }
     })
   }

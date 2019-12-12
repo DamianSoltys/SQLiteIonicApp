@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { SelectDropDownComponent } from 'ngx-select-dropdown';
 import { FormBuilder } from '@angular/forms';
 import { DatabaseService } from 'src/app/services/database.service';
+import { ToastsService } from 'src/app/services/toasts.service';
 
 export enum SelectOption {
   BMI = 'Kalkulator BMI',
@@ -86,7 +87,7 @@ export class CalculatorsComponent implements OnInit {
   public idealWeight:number;
   @ViewChild('calculatorSelect',{static: false}) calcSelect:SelectDropDownComponent;
   @ViewChild('productSelect',{static: false}) prodSelect:SelectDropDownComponent;
-  constructor(private fb:FormBuilder,private db:DatabaseService) { }
+  constructor(private fb:FormBuilder,private db:DatabaseService,private toastCtrl:ToastsService) { }
 
   ngOnInit() {}
 
@@ -106,9 +107,9 @@ export class CalculatorsComponent implements OnInit {
   public setHistoryData(historyData:History) {
     this.db.setHistory(historyData).subscribe(response=>{
       if(response) {
-        alert('Pomyślnie dodano do historii');
+        this.toastCtrl.showToast('Pomyślnie dodano do historii');
       } else {
-        alert('Nie udało się dodać danych');
+        this.toastCtrl.showToast('Nie udało się dodać danych');
       }
     });
   }

@@ -3,16 +3,18 @@
 <ion-content>
   <ion-content *ngIf="isHistory">
     <div *ngIf="mealList">
-      <div *ngFor="let meal of mealList" class="meal-list">
-        <div class="picture-container" *ngIf="meal.picture">
-          <ion-img [src]="meal.picture" class="picture"></ion-img>
+      <ion-virtual-scroll [items]="mealList">
+        <div *virtualItem="let meal" class="meal-list">
+          <div class="picture-container" *ngIf="meal.picture">
+            <ion-img [src]="meal.picture" class="picture"></ion-img>
+          </div>
+          <p class="meal-list__text">Nazwa:{{meal.name}}</p>
+          <p class="meal-list__text">Ilosć białka:{{meal.protein}}</p>
+          <p class="meal-list__text">Ilosć węglowodanów:{{meal.carbohydrates}}</p>
+          <p class="meal-list__text">Ilosć tłuszczów:{{meal.fat}}</p>
+          <p class="meal-list__text">Ilosć kalorii:{{meal.kcal}}</p>
         </div>
-        <p class="meal-list__text">Nazwa:{{meal.name}}</p>
-        <p class="meal-list__text">Ilosć białka:{{meal.protein}}</p>
-        <p class="meal-list__text">Ilosć węglowodanów:{{meal.carbohydrates}}</p>
-        <p class="meal-list__text">Ilosć tłuszczów:{{meal.fat}}</p>
-        <p class="meal-list__text">Ilosć kalorii:{{meal.kcal}}</p>
-      </div>
+      </ion-virtual-scroll>
     </div>
     <div *ngIf="!mealList" class="empty-list">
       <p>Nie masz żadnych dodanych posiłków</p>

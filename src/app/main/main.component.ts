@@ -19,6 +19,7 @@ export class MainComponent implements OnInit {
     //     console.log(ready);
     //   }
     // });
+    this.nav.navigateRoot('home/homePage');
   }
   
   public penFirst() {

@@ -7,380 +7,290 @@ import { HttpClient } from '@angular/common/http';
 import { User } from '../register/register.component';
 import { Meal } from '../main/food-list/food-list.component';
 import { Product, History } from '../main/calculators/calculators.component';
+import { ToastsService } from './toasts.service';
 
 export interface TelInfo {
-    telId: number;
-    manufacturer: string;
-    model: string;
-    url: string;
-    android: string;
+  telId: number;
+  manufacturer: string;
+  model: string;
+  url: string;
+  android: string;
 }
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root'
 })
 export class DatabaseService {
-    private database: SQLiteObject;
-    public getMealData = new Subject<any>();
-    public getHistoryData = new Subject<any>();
-    public getProductData = new Subject<any>();
-    private dbReady: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(
-        false
+  private database: SQLiteObject;
+  public getMealData = new Subject<any>();
+  public getHistoryData = new Subject<any>();
+  public getProductData = new Subject<any>();
+  private dbReady: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+
+  telephones = new BehaviorSubject([]);
+
+  constructor(
+    private plt: Platform,
+    private sqlitePorter: SQLitePorter,
+    private sqlite: SQLite,
+    private http: HttpClient,
+    private toastCtrl: ToastsService
+  ) {
+    this.plt.ready().then(() => {
+      this.sqlite
+        .create({
+          name: 'fitApp.db',
+          location: 'default'
+        })
+        .then((db: SQLiteObject) => {
+          this.database = db;
+          this.seedDatabase();
+        });
+    });
+  }
+
+  private seedDatabase() {
+    this.http.get('assets/seed.sql', { responseType: 'text' }).subscribe(sql => {
+      this.sqlitePorter
+        .importSqlToDb(this.database, sql)
+        .then(() => {
+          //this.loadTelephones();
+          this.dbReady.next(true);
+        })
+        .catch(e => console.error(e));
+    });
+  }
+
+  public registerUser(userData: User) {
+    let subject = new Subject<any>();
+    let data = [userData.userName, userData.password, userData.email];
+
+    this.database.executeSql(`INSERT INTO user(userName,password,email) VALUES(?,?,?)`, data).then(
+      data => {
+        console.log(data);
+        if (data) {
+          subject.next(true);
+        } else {
+          subject.next(false);
+        }
+      },
+      reject => {
+        subject.next(false);
+      }
     );
 
-    telephones = new BehaviorSubject([]);
+    return subject;
+  }
 
-    constructor(
-        private plt: Platform,
-        private sqlitePorter: SQLitePorter,
-        private sqlite: SQLite,
-        private http: HttpClient
-    ) {
-        this.plt.ready().then(() => {
-            this.sqlite
-                .create({
-                    name: 'fitApp.db',
-                    location: 'default'
-                })
-                .then((db: SQLiteObject) => {
-                    this.database = db;
-                    this.seedDatabase();
-                });
-        });
-    }
+  public loginUser(userData: User) {
+    let subject = new Subject<any>();
+    let userName = userData.userName;
 
-    private seedDatabase() {
-        this.http
-            .get('assets/seed.sql', { responseType: 'text' })
-            .subscribe(sql => {
-                this.sqlitePorter
-                    .importSqlToDb(this.database, sql)
-                    .then(() => {
-                        //this.loadTelephones();
-                        this.dbReady.next(true);
-                    })
-                    .catch(e => console.error(e));
-            });
-    }
+    this.database.executeSql(`SELECT * FROM user WHERE userName = ?`, [userName]).then(
+      data => {
+        if (data.rows.length > 0) {
+          let user: User = {
+            userId: data.rows.item(0).userId,
+            userName: data.rows.item(0).userName,
+            email: data.rows.item(0).email,
+            password: data.rows.item(0).password
+          };
 
-    public registerUser(userData:User) {
-        let subject = new Subject<any>();
-        let data = [userData.userName,userData.password,userData.email];
-        
-        this.database
-            .executeSql(
-                `INSERT INTO user(userName,password,email) VALUES(?,?,?)`,
-                data
-            )
-            .then(data => {
-                console.log(data);
-                if(data) {
-                    subject.next(true);
-                } else {
-                    subject.next(false);
-                }
-            },reject=>{
-                subject.next(false);
-            });
-
-        return subject;
-    }
-
-    public loginUser(userData:User) {
-        let subject = new Subject<any>();
-        let userName = userData.userName;
-    
-        this.database
-            .executeSql(`SELECT * FROM user WHERE userName = ?`, [userName])
-            .then(data => {
-                if (data.rows.length > 0) {
-                    let user:User = {
-                        userId:data.rows.item(0).userId,
-                        userName:data.rows.item(0).userName,
-                        email:data.rows.item(0).email,
-                        password:data.rows.item(0).password,
-                    }
-
-                    if(user.password == userData.password) {
-                        subject.next(user);
-                        localStorage.setItem('user',JSON.stringify(user));
-                    } else {
-                        subject.next(false);
-                    }
-                    
-                } else {
-                   subject.next(false);
-                }
-            },reject=>{
-                console.log(reject);
-                subject.next(false);
-            });
-
-        return subject;
-    }
-
-    public getHistory() {
-        let subject = new Subject<any>();
-        this.database
-            .executeSql('SELECT * FROM calculateHistory', [])
-            .then(data => {
-                let history: History[] = [];
-
-                if (data.rows.length > 0) {
-                    for (let i = 0; i < data.rows.length; i++) {
-                        history.push({
-                            calculateId:data.rows.item(i).calculateId,
-                            userId:data.rows.item(i).userId,
-                            calculateName:data.rows.item(i).calculateName,
-                            BMI:data.rows.item(i).BMI,
-                            weight:data.rows.item(i).userWeight,
-                            height:data.rows.item(i).userHeight,
-                            age:data.rows.item(i).age,
-                            carbs:data.rows.item(i).carbs,
-                            protein:data.rows.item(i).protein,  
-                            fat:data.rows.item(i).fat,  
-                            kcal:data.rows.item(i).kcal,
-                            date:data.rows.item(i).historyDate,                           
-                        });
-                    }
-                    subject.next(history);
-                } else {
-                    subject.next(false);
-                }
-                
-            },reject=>{
-                subject.next(false);
-            });
-        return subject;
-    }
-
-
-
-    public deleteTableData(tableName) {
-        return this.database.executeSql(`DELETE FROM ${tableName}`);
-    }
-
-    public getUsers() {
-        return this.database.executeSql(`SELECT * FROM user`,[]).then(users=>{
-            if(users.rows.length > 0) {
-                for(let i = 0; i < users.rows.length; i++) {
-                    alert(users.rows.item(i).userName);
-                }
-            }
-        });
-    }
-
-    public getMeals() {
-        let subject = new Subject<any>();
-        this.database
-            .executeSql('SELECT * FROM meal', [])
-            .then(data => {
-                let meals: Meal[] = [];
-
-                if (data.rows.length > 0) {
-                    for (let i = 0; i < data.rows.length; i++) {
-                        meals.push({
-                            mealId:data.rows.item(i).mealId,
-                            userId:data.rows.item(i).userId,
-                            name:data.rows.item(i).mealName,
-                            carbohydrates:data.rows.item(i).carbs,
-                            protein:data.rows.item(i).protein,
-                            kcal:data.rows.item(i).kcal,
-                            fat:data.rows.item(i).fat,
-                            picture:data.rows.item(i).picture,
-                            date:data.rows.item(i).date,                            
-                        });
-                    }
-                    subject.next(meals);
-                } else {
-                    subject.next(false);
-                }
-                
-            },reject=>{
-                subject.next(false);
-            });
-            return subject;
-    }
-
-    public getProducts() {
-        let subject = new Subject<any>();
-        this.database
-            .executeSql('SELECT * FROM product', [])
-            .then(data => {
-                let products: Product[] = [];
-
-                if (data.rows.length > 0) {
-                    for (let i = 0; i < data.rows.length; i++) {
-                        products.push({
-                            productName:data.rows.item(i).productName,
-                            carbs:data.rows.item(i).carbs,
-                            protein:data.rows.item(i).protein,
-                            kcal:data.rows.item(i).kcal,
-                            fat:data.rows.item(i).fat,                                               
-                        });
-                    }
-                    subject.next(products);
-                } else {
-                    subject.next(false);
-                }
-                
-            },reject=>{
-                subject.next(false);
-            });
-            return subject;
-    }
-
-    public setMeal(mealData:Meal) {
-        let subject = new Subject<any>();
-        let data = Object.values(mealData);
-
-        if(mealData.userId) {
-            this.database
-            .executeSql(
-                `INSERT INTO meal(userId,mealName,carbs,protein,fat,kcal,picture,date) VALUES (?,?,?,?,?,?,?,?)`,
-                data
-            )
-            .then(data => {
-                this.getMealData.next(true);
-                subject.next(true);
-            },reject=>{
-                console.log(reject);
-                subject.next(false);
-            });
-        } else {
-            console.log('Brak userId');
+          if (user.password == userData.password) {
+            subject.next(user);
+            localStorage.setItem('user', JSON.stringify(user));
+          } else {
             subject.next(false);
-        }
-        
-        return subject;
-    }
-
-    public setHistory(historyData:History) {
-        let subject = new Subject<any>();
-        let data = Object.values(historyData);
-        alert(historyData.BMI)
-        alert(historyData.date)
-        if(historyData.userId) {
-            this.database
-            .executeSql(
-                `INSERT INTO calculateHistory(userId,calculateName,BMI,userWeight,userHeight,age,carbs,protein,fat,kcal,historyDate) VALUES (?,?,?,?,?,?,?,?,?,?,?)`,
-                data
-            )
-            .then(data => {
-                this.getHistoryData.next(true);
-                subject.next(true);
-            },reject=>{
-                console.log(reject)
-                subject.next(false);
-            });
+          }
         } else {
-            subject.next(false);
+          subject.next(false);
         }
-        
-        return subject;
-    }
+      },
+      reject => {
+        console.log(reject);
+        subject.next(false);
+      }
+    );
 
-    public deleteMeal(mealId:number) {
-        this.database
-            .executeSql('DELETE FROM meal WHERE mealId = ?', [mealId])
-            .then(() => {
-                this.getMealData.next(true);
-         });
-    }
+    return subject;
+  }
 
-    public deleteHistory(calculateHistoryId:number) {
-        this.database
-            .executeSql('DELETE FROM calculateHistory WHERE calculateId = ?', [calculateHistoryId])
-            .then(() => {
-                this.getHistoryData.next(true);
-        });
-    }
+  public getHistory() {
+    let subject = new Subject<any>();
+    this.database.executeSql('SELECT * FROM calculateHistory', []).then(
+      data => {
+        let history: History[] = [];
 
-    public getDatabaseState() {
-        return this.dbReady;
-    }
-
-    public getTelephones(): Observable<TelInfo[]> {
-        return this.telephones.asObservable();
-    }
-
-    public loadTelephones() {
-        return this.database
-            .executeSql('SELECT * FROM telephone', [])
-            .then(data => {
-                // tslint:disable-next-line:prefer-const
-                let telephones: TelInfo[] = [];
-
-                if (data.rows.length > 0) {
-                    for (let i = 0; i < data.rows.length; i++) {
-                        telephones.push({
-                            telId: data.rows.item(i).telId,
-                            manufacturer: data.rows.item(i).manufacturer,
-                            model: data.rows.item(i).model,
-                            url: data.rows.item(i).url,
-                            android: data.rows.item(i).android
-                        });
-                    }
-                }
-                this.telephones.next(telephones);
+        if (data.rows.length > 0) {
+          for (let i = 0; i < data.rows.length; i++) {
+            history.push({
+              calculateId: data.rows.item(i).calculateId,
+              userId: data.rows.item(i).userId,
+              calculateName: data.rows.item(i).calculateName,
+              BMI: data.rows.item(i).BMI,
+              weight: data.rows.item(i).userWeight,
+              height: data.rows.item(i).userHeight,
+              age: data.rows.item(i).age,
+              carbs: data.rows.item(i).carbs,
+              protein: data.rows.item(i).protein,
+              fat: data.rows.item(i).fat,
+              kcal: data.rows.item(i).kcal,
+              date: data.rows.item(i).historyDate
             });
+          }
+          subject.next(history);
+        } else {
+          subject.next(false);
+        }
+      },
+      reject => {
+        subject.next(false);
+      }
+    );
+    return subject;
+  }
+
+  public deleteTableData(tableName) {
+    return this.database.executeSql(`DELETE FROM ${tableName}`);
+  }
+
+  public getUsers() {
+    return this.database.executeSql(`SELECT * FROM user`, []).then(users => {
+      if (users.rows.length > 0) {
+        for (let i = 0; i < users.rows.length; i++) {
+          alert(users.rows.item(i).userName);
+        }
+      }
+    });
+  }
+
+  public getMeals() {
+    let subject = new Subject<any>();
+    this.database.executeSql('SELECT * FROM meal', []).then(
+      data => {
+        let meals: Meal[] = [];
+
+        if (data.rows.length > 0) {
+          for (let i = 0; i < data.rows.length; i++) {
+            meals.push({
+              mealId: data.rows.item(i).mealId,
+              userId: data.rows.item(i).userId,
+              name: data.rows.item(i).mealName,
+              carbohydrates: data.rows.item(i).carbs,
+              protein: data.rows.item(i).protein,
+              kcal: data.rows.item(i).kcal,
+              fat: data.rows.item(i).fat,
+              picture: data.rows.item(i).picture,
+              date: data.rows.item(i).date
+            });
+          }
+          subject.next(meals);
+        } else {
+          subject.next(false);
+        }
+      },
+      reject => {
+        subject.next(false);
+      }
+    );
+    return subject;
+  }
+
+  public getProducts() {
+    let subject = new Subject<any>();
+    this.database.executeSql('SELECT * FROM product', []).then(
+      data => {
+        let products: Product[] = [];
+
+        if (data.rows.length > 0) {
+          for (let i = 0; i < data.rows.length; i++) {
+            products.push({
+              productName: data.rows.item(i).productName,
+              carbs: data.rows.item(i).carbs,
+              protein: data.rows.item(i).protein,
+              kcal: data.rows.item(i).kcal,
+              fat: data.rows.item(i).fat
+            });
+          }
+          subject.next(products);
+        } else {
+          subject.next(false);
+        }
+      },
+      reject => {
+        subject.next(false);
+      }
+    );
+    return subject;
+  }
+
+  public setMeal(mealData: Meal) {
+    let subject = new Subject<any>();
+    let data = Object.values(mealData);
+
+    if (mealData.userId) {
+      this.database
+        .executeSql(
+          `INSERT INTO meal(userId,mealName,carbs,protein,fat,kcal,picture,date) VALUES (?,?,?,?,?,?,?,?)`,
+          data
+        )
+        .then(
+          data => {
+            this.getMealData.next(true);
+            subject.next(true);
+          },
+          reject => {
+            console.log(reject);
+            subject.next(false);
+          }
+        );
+    } else {
+      console.log('Brak userId');
+      subject.next(false);
     }
 
-    public addTelephone(manufacturer, model, url, android) {
-        // tslint:disable-next-line:prefer-const
-        let data = [manufacturer, model, url, android];
-        return this.database
-            .executeSql(
-                'INSERT INTO telephone(manufacturer,model,url,android) VALUES(?,?,?,?)',
-                data
-            )
-            .then(data => {
-                this.loadTelephones();
-                console.log('telephone added');
-                console.log(this.telephones);
-            });
+    return subject;
+  }
+
+  public setHistory(historyData: History) {
+    let subject = new Subject<any>();
+    let data = Object.values(historyData);
+    if (historyData.userId) {
+      this.database
+        .executeSql(
+          `INSERT INTO calculateHistory(userId,calculateName,BMI,userWeight,userHeight,age,carbs,protein,fat,kcal,historyDate) VALUES (?,?,?,?,?,?,?,?,?,?,?)`,
+          data
+        )
+        .then(
+          data => {
+            this.getHistoryData.next(true);
+            subject.next(true);
+          },
+          reject => {
+            console.log(reject);
+            subject.next(false);
+          }
+        );
+    } else {
+      subject.next(false);
     }
 
-    public getTelephone(telId): Promise<TelInfo> {
-        return this.database
-            .executeSql('SELECT * FROM telephone WHERE telId = ?', [telId])
-            .then(data => {
-                return {
-                    telId: data.rows.item(0).telId,
-                    manufacturer: data.rows.item(0).manufacturer,
-                    model: data.rows.item(0).model,
-                    url: data.rows.item(0).url,
-                    android: data.rows.item(0).android
-                };
-            });
-    }
+    return subject;
+  }
 
-    public deleteTelephone(telId) {
-        return this.database
-            .executeSql('DELETE FROM telephone WHERE telId = ?', [telId])
-            .then(() => {
-                this.loadTelephones();
-                console.log(this.telephones);
-            });
-    }
+  public deleteMeal(mealId: number) {
+    this.database.executeSql('DELETE FROM meal WHERE mealId = ?', [mealId]).then(() => {
+      this.getMealData.next(true);
+    });
+  }
 
-    public updateTelephone(tel: TelInfo) {
-        // tslint:disable-next-line:prefer-const
-        let data = [
-            tel.telId,
-            tel.manufacturer,
-            tel.model,
-            tel.url,
-            tel.android
-        ];
-        return this.database
-            .executeSql(
-                `UPDATE telephone SET telId = ?,manufacturer = ?,model = ?,url = ?,android = ? WHERE telId = ${tel.telId}`,
-                data
-            )
-            .then(data => {
-                this.loadTelephones();
-                console.log('telephone updated');
-            });
-    }
+  public deleteHistory(calculateHistoryId: number) {
+    this.database.executeSql('DELETE FROM calculateHistory WHERE calculateId = ?', [calculateHistoryId]).then(() => {
+      this.getHistoryData.next(true);
+    });
+  }
+
+  public getDatabaseState() {
+    return this.dbReady;
+  }
 }
