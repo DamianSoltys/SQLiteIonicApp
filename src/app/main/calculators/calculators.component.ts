@@ -202,6 +202,7 @@ export class CalculatorsComponent implements OnInit {
 
   public calculateBMI() {
     this.BMI = this.bmiForm.controls.weight.value/((this.bmiForm.controls.height.value/100)*(this.bmiForm.controls.height.value/100));
+    this.BMI = Number(this.BMI.toFixed(2));
     if(this.BMI <= 18.5){
       this.bmiText = 'niedowage';
     } else if(this.BMI > 18.5 && this.BMI <= 24.9){
@@ -216,6 +217,7 @@ export class CalculatorsComponent implements OnInit {
 
   public calculateIdealWeight() {
     this.idealWeight = ((this.weightForm.controls.height.value-100) + (this.weightForm.controls.age.value/10)) *0.9;
+    this.idealWeight = Number(this.idealWeight.toFixed(2));
   }
 
   public selectionChanged($event) {

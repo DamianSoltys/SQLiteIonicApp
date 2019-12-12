@@ -29,10 +29,10 @@
     display:flex;
     justify-content: center;
     align-items: center;
-    overflow: auto;
+    overflow: hidden;
     .picture {
-        max-width: 300px;
-        max-height: 300px;
+        max-width: 250px;
+        max-height: 250px;
         border:2px solid darkblue;
     }
 }
