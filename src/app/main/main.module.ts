@@ -10,6 +10,7 @@ import { FoodListModule } from './food-list/food-list.module';
 import { CalculatorsComponent } from './calculators/calculators.component';
 import { FoodListComponent } from './food-list/food-list.component';
 import { HistoryModule } from './history/history.module';
+import { MapModule } from './map/map.module';
 
 
 @NgModule({
@@ -21,7 +22,8 @@ import { HistoryModule } from './history/history.module';
     RouterModule,
     CalculatorsModule,
     FoodListModule,
-    HistoryModule
+    HistoryModule,
+    MapModule
   ],
 })
 export class MainModule { }

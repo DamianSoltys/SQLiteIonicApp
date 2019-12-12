@@ -13,6 +13,7 @@
   },
   "private": true,
   "dependencies": {
+    "@agm/core": "^1.1.0",
     "@angular/common": "~8.1.2",
     "@angular/core": "~8.1.2",
     "@angular/forms": "~8.1.2",
@@ -22,6 +23,7 @@
     "@ionic-native/camera": "^5.17.1",
     "@ionic-native/camera-preview": "^5.17.1",
     "@ionic-native/core": "^5.0.0",
+    "@ionic-native/geolocation": "^5.18.0",
     "@ionic-native/splash-screen": "^5.0.0",
     "@ionic-native/sqlite": "^5.17.1",
     "@ionic-native/sqlite-porter": "^5.17.1",
@@ -30,6 +32,7 @@
     "cordova-android": "8.1.0",
     "cordova-plugin-camera": "^4.1.0",
     "cordova-plugin-camera-preview": "^0.11.1",
+    "cordova-plugin-geolocation": "^4.0.2",
     "cordova-sqlite-storage": "^4.0.0",
     "core-js": "^2.5.4",
     "ngx-select-dropdown": "^1.2.1",
@@ -86,7 +89,8 @@
       "cordova-plugin-camera-preview": {},
       "cordova-plugin-camera": {
         "ANDROID_SUPPORT_V4_VERSION": "27.+"
-      }
+      },
+      "cordova-plugin-geolocation": {}
     },
     "platforms": [
       "android"

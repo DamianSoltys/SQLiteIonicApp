@@ -21,7 +21,7 @@ export class HistoryComponent implements OnInit {
       if(response) {
         this.historyList = response;
       }else {
-        alert('Brak historii');
+        //alert('Brak historii');
       }
     })
   }

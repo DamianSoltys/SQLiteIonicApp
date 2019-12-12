@@ -4,6 +4,7 @@ import { MainComponent } from './main.component';
 import { CalculatorsComponent } from './calculators/calculators.component';
 import { FoodListComponent } from './food-list/food-list.component';
 import { HistoryComponent } from './history/history.component';
+import { MapComponent } from './map/map.component';
 
 
 const routes: Routes = [
@@ -11,6 +12,7 @@ const routes: Routes = [
     {path:'calculators',component:CalculatorsComponent},
     {path:'foodList',component:FoodListComponent},
     {path:'history',component:HistoryComponent},
+    {path:'map',component:MapComponent},
   ]},
   
   
