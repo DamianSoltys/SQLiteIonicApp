@@ -5,6 +5,9 @@
     flex-direction: column;
     border-bottom: 1px solid black;
     margin-bottom: 5px;
+    .container-type__button {
+        width:30%;
+    }
 }
 .empty-list {
     display: flex;

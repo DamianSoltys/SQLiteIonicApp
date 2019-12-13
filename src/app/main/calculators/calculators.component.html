@@ -35,7 +35,7 @@
         <ion-button expand="block" type="submit">Zapisz</ion-button>
       </div>
     </form>
-    <div *ngIf="productSelectList">
+    <div *ngIf="productSelectList" class="select-list">
       <p class="product-selected">Lista wybranych produktów</p>
       <div *ngFor="let product of productSelectList,let i = index" class="product-list">
         <p class="product-text">{{i+1}}.Nazwa:{{product.productName}}</p>

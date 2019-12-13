@@ -1,22 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Router, CanActivate } from '@angular/router';
+import { DatabaseService } from './database.service';
 @Injectable()
 export class AuthGuardService implements CanActivate {
-  constructor( public router: Router) {}
+  constructor( public router: Router,private db:DatabaseService) {}
   canActivate(): boolean {
-    if (!this.getUser()) {
+    if (!this.db.getUser()) {
       this.router.navigate(['/login']);
       return false;
     }
     return true;
-  }
-
-  public getUser() {
-      let userData = localStorage.getItem('user');
-      if(userData) {
-          return true;
-      } else {
-          return false;
-      }
   }
 }

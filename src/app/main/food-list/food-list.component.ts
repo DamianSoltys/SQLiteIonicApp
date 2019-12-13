@@ -31,14 +31,14 @@ export class FoodListComponent implements OnInit {
     destinationType: this.camera.DestinationType.DATA_URL,
     encodingType: this.camera.EncodingType.JPEG,
     mediaType: this.camera.MediaType.PICTURE,
-    targetHeight:250,
-    targetWidth:250
+    targetHeight:246,
+    targetWidth:246
   }
 
   public picture:any;
 
   public isHistory:boolean = true;
-  public mealList:Meal[] = null;
+  public mealList:Meal[] = [];
   public success = false;
   public error = false;
 
@@ -54,14 +54,32 @@ export class FoodListComponent implements OnInit {
   constructor(public platform:Platform,private camera: Camera,private fb:FormBuilder,private db:DatabaseService,private toastCtrl:ToastsService) { }
 
   ngOnInit() {
-    this.platform.ready().then(()=>{
-      this.getMeals();
-      this.db.getMealData.subscribe(response=>{
+    
+      this.platform.ready().then(()=>{
+        this.getMeals();
+        this.db.getMealData.subscribe(response=>{
+          if(response) {
+            this.getMeals();
+          }
+        });
+      });   
+  }
+
+  public deleteMeal(mealId:any) {
+    let userId = this.db.getUser().userId;
+    if (userId) {
+
+      this.db.deleteMeal(mealId,userId).subscribe(response=>{
         if(response) {
-          this.getMeals();
+          this.toastCtrl.showToast('Usunięcie się powiodło');
+        } else {
+          this.toastCtrl.showToast('Usunięcie się niepowiodło');
         }
-      })
-    });
+      });
+
+    }else {
+      this.toastCtrl.showToast('Użytkownik nie jest zalogowany!');
+    }
   }
 
   private getMeals() {
@@ -70,7 +88,7 @@ export class FoodListComponent implements OnInit {
       if(response) {
         this.mealList = response;
       } else {
-        this.mealList = null;
+        this.mealList = [];
       }
     })
   }
@@ -84,7 +102,7 @@ export class FoodListComponent implements OnInit {
   }
 
   public onSubmit() {
-    let userIds = JSON.parse(localStorage.getItem('user')).userId;
+    let userIds = this.db.getUser().userId;
     if(this.picture && userIds) {
       let mealData:Meal = {
         userId:userIds,
@@ -98,9 +116,10 @@ export class FoodListComponent implements OnInit {
       }
 
       this.db.setMeal(mealData).subscribe(response=>{
-        console.log(response)
         if(response) {
           this.toastCtrl.showToast('Posiłek został pomyślnie dodany');
+          this.addForm.reset();
+          this.picture = null;
           this.switchView('history');
         } else {
           this.toastCtrl.showToast('Nie udało się dodać posiłku');

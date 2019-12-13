@@ -2,7 +2,7 @@
 
 <ion-content>
   <ion-content *ngIf="isHistory">
-    <div *ngIf="mealList">
+    <div *ngIf="mealList.length">
       <ion-virtual-scroll [items]="mealList">
         <div *virtualItem="let meal" class="meal-list">
           <div class="picture-container" *ngIf="meal.picture">
@@ -13,10 +13,13 @@
           <p class="meal-list__text">Ilosć węglowodanów:{{meal.carbohydrates}}</p>
           <p class="meal-list__text">Ilosć tłuszczów:{{meal.fat}}</p>
           <p class="meal-list__text">Ilosć kalorii:{{meal.kcal}}</p>
+          <div>
+            <ion-button expand="block" (click)="deleteMeal(meal.mealId)">Usuń</ion-button>
+          </div>
         </div>
       </ion-virtual-scroll>
     </div>
-    <div *ngIf="!mealList" class="empty-list">
+    <div *ngIf="!mealList.length" class="empty-list">
       <p>Nie masz żadnych dodanych posiłków</p>
     </div>
     <div>

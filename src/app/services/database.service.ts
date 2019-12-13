@@ -68,7 +68,7 @@ export class DatabaseService {
     this.database.executeSql(`INSERT INTO user(userName,password,email) VALUES(?,?,?)`, data).then(
       data => {
         console.log(data);
-        if (data) {
+        if(data.rowsAffected>=1) {
           subject.next(true);
         } else {
           subject.next(false);
@@ -81,6 +81,15 @@ export class DatabaseService {
 
     return subject;
   }
+
+  public getUser() {
+    let userData = JSON.parse(localStorage.getItem('user'));
+    if(userData) {
+        return userData;
+    } else {
+        return false;
+    }
+}
 
   public loginUser(userData: User) {
     let subject = new Subject<any>();
@@ -236,8 +245,14 @@ export class DatabaseService {
         )
         .then(
           data => {
+          if(data.rowsAffected>=1) {
             this.getMealData.next(true);
+            this.getHistoryData.next(true);
             subject.next(true);
+          }else {
+            subject.next(false);
+          }
+
           },
           reject => {
             console.log(reject);
@@ -263,8 +278,13 @@ export class DatabaseService {
         )
         .then(
           data => {
-            this.getHistoryData.next(true);
-            subject.next(true);
+            if(data.rowsAffected>=1) {
+              this.getHistoryData.next(true);
+              subject.next(true);
+            } else {
+              subject.next(false);
+            }
+            
           },
           reject => {
             console.log(reject);
@@ -278,16 +298,34 @@ export class DatabaseService {
     return subject;
   }
 
-  public deleteMeal(mealId: number) {
-    this.database.executeSql('DELETE FROM meal WHERE mealId = ?', [mealId]).then(() => {
+  public deleteMeal(mealId: number,userId:number) {
+    let subject = new Subject<any>();
+    this.database.executeSql('DELETE FROM meal WHERE mealId = ? AND userId = ?', [mealId,userId]).then((data) => {
       this.getMealData.next(true);
+      if(data.rowsAffected>=1) {
+        subject.next(true);
+      } else {
+        subject.next(false);
+      }
+    },error=>{
+      subject.next(false);
     });
+    return subject;
   }
 
-  public deleteHistory(calculateHistoryId: number) {
-    this.database.executeSql('DELETE FROM calculateHistory WHERE calculateId = ?', [calculateHistoryId]).then(() => {
+  public deleteHistory(calculateHistoryId: number,userId:number) {
+    let subject = new Subject<any>();
+    this.database.executeSql('DELETE FROM calculateHistory WHERE calculateId = ? AND userId = ?', [calculateHistoryId,userId]).then((data) => {
       this.getHistoryData.next(true);
+      if(data.rowsAffected>=1) {
+        subject.next(true);
+      } else {
+        subject.next(false);
+      }
+    },error=>{
+      subject.next(false);
     });
+    return subject;
   }
 
   public getDatabaseState() {

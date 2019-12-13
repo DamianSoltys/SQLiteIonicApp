@@ -94,6 +94,7 @@ export class CalculatorsComponent implements OnInit {
   public productChanged($event) {
 
   }
+
   private getProductData() {
     this.db.getProducts().subscribe((data:[])=>{
       if(data) {
@@ -113,8 +114,9 @@ export class CalculatorsComponent implements OnInit {
       }
     });
   }
+
   public onSubmit(type:string) {
-    let userIds = JSON.parse(localStorage.getItem('user')).userId;
+    let userIds = this.db.getUser().userId;
     switch(type) {
       case 'bmi':{
         this.calculateBMI();
@@ -131,6 +133,8 @@ export class CalculatorsComponent implements OnInit {
           kcal:0,
           date:new Date().toISOString().slice(0, 10),
         }
+        this.bmiForm.reset();
+        this.BMI = null;
         this.setHistoryData(historyData);
         
         break;
@@ -149,6 +153,9 @@ export class CalculatorsComponent implements OnInit {
           kcal:this.calculatedData.kcal,                           
           date:new Date().toISOString().slice(0, 10),
         }
+        this.kcalForm.reset();
+        this.productSelectList = null;
+        this.calculatedData = null;
         this.setHistoryData(historyData);
         break;
       }
@@ -167,6 +174,8 @@ export class CalculatorsComponent implements OnInit {
           kcal:0,
           date:new Date().toISOString().slice(0, 10),
         }
+        this.weightForm.reset();
+        this.idealWeight = null;
         this.setHistoryData(historyData);
         break;
       }
@@ -183,17 +192,17 @@ export class CalculatorsComponent implements OnInit {
         this.productSelectList.push(product);
         if(!this.calculatedData) {
           this.calculatedData = {
-            fat:product.fat,
-            kcal:product.kcal,
-            protein:product.protein,
-            carbs:product.carbs
+            fat:Number((product.fat).toFixed(2)),
+            kcal:Number((product.kcal).toFixed(2)),
+            protein:Number((product.protein).toFixed(2)),
+            carbs:Number((product.carbs).toFixed(2)),
           }
         } else {
           this.calculatedData = {
-            fat:this.calculatedData.fat + product.fat,
-            kcal:this.calculatedData.kcal + product.kcal,
-            protein:this.calculatedData.protein + product.protein,
-            carbs:this.calculatedData.carbs + product.carbs
+            fat:Number((this.calculatedData.fat + product.fat).toFixed(2)),
+            kcal:Number((this.calculatedData.kcal + product.kcal).toFixed(2)),
+            protein:Number((this.calculatedData.protein + product.protein).toFixed(2)),
+            carbs:Number((this.calculatedData.carbs + product.carbs).toFixed(2)),
           }
         }
       }
