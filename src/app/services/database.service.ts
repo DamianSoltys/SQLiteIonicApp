@@ -124,9 +124,9 @@ export class DatabaseService {
     return subject;
   }
 
-  public getHistory() {
+  public getHistory(userId:number) {
     let subject = new Subject<any>();
-    this.database.executeSql('SELECT * FROM calculateHistory', []).then(
+    this.database.executeSql('SELECT * FROM calculateHistory WHRERE userId = ?', [userId]).then(
       data => {
         let history: History[] = [];
 
@@ -173,9 +173,9 @@ export class DatabaseService {
     });
   }
 
-  public getMeals() {
+  public getMeals(userId:number) {
     let subject = new Subject<any>();
-    this.database.executeSql('SELECT * FROM meal', []).then(
+    this.database.executeSql('SELECT * FROM meal WHERE userId = ?', [usreId]).then(
       data => {
         let meals: Meal[] = [];
 
