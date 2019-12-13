@@ -175,7 +175,7 @@ export class DatabaseService {
 
   public getMeals(userId:number) {
     let subject = new Subject<any>();
-    this.database.executeSql('SELECT * FROM meal WHERE userId = ?', [usreId]).then(
+    this.database.executeSql('SELECT * FROM meal WHERE userId = ?', [userId]).then(
       data => {
         let meals: Meal[] = [];
 
