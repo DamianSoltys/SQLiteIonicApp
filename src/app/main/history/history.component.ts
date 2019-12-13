@@ -49,7 +49,7 @@ export class HistoryComponent implements OnInit {
   }
 
   public getHistoryData() {
-    this.db.getHistory().subscribe(response=>{
+    this.db.getHistory(this.db.getUser().userId).subscribe(response=>{
       console.log(response)
       if(response) {
         this.historyList = response;

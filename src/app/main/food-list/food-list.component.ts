@@ -83,7 +83,7 @@ export class FoodListComponent implements OnInit {
   }
 
   private getMeals() {
-    this.db.getMeals().subscribe(response=>{
+    this.db.getMeals(this.db.getUser().userId).subscribe(response=>{
       console.log(response)
       if(response) {
         this.mealList = response;
