@@ -126,7 +126,7 @@ export class DatabaseService {
 
   public getHistory(userId:number) {
     let subject = new Subject<any>();
-    this.database.executeSql('SELECT * FROM calculateHistory WHRERE userId = ?', [userId]).then(
+    this.database.executeSql('SELECT * FROM calculateHistory WHERE userId = ?', [userId]).then(
       data => {
         let history: History[] = [];
 
